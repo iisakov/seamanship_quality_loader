@@ -1,90 +1,80 @@
-## Локальный запуск
+### В **2023** году участвоал в соревновании по написанию стратегии на **pl/pgSQL**.  
+Здесь лежат все скрипты, которые удалось сохранить для истории.  
+Место в турнирной таблице - **33** из **50** финалистов.  
+Обшее количество участников - **150 аккаунтов**.  
 
-Скачивание контейнера:
+![otput_1](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/e8c2c6d5-7502-4117-a4a3-4d2dd03e228d)  
+Гифки большего размера gitHub не пропускает, так что это единственная гифка.
 
-```sh
-docker pull ghcr.io/all-cups/it_one_cup_sql
+
+Сам код смотреть не стоит - в условиях нехватки времени и среднего знания **pl/pgSQL**, код весьмя удручает.  
+Но есть прикольные гифки. Они сгенерированы на основе логфайлов локалранера чемпионата.  
+
+**Локал ранер организаторами был реализован ввиде докер файла с требованиями внешних файлов:
+  - файл настроек - предоставлялся организаторами (options/)
+  - файла стратегии - непосредственно скрипт победной стратегии (solution/)
+  
+Так же среди файлов можно найти небольшой **bash-скрипт**, в котором я запускал **несколько докер контейнеров на своём ноутбуке.**  
+
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/e87ea96e-ac7a-473d-91c3-174799a378d8)  
+
+## Правила игрового мира
+В данной игре вам предстоит торговать и перевозить товары. Ищите выгодные контракты и заработайте больше ваших оппонентов для победы.
+
+#### Действия участников игры
+В качестве действий вы можете:
+
+* Предлагать заключать контракты
+* Грузить/разгружать корабли на островах
+* Перемещать корабли между островами
+* Ожидать определенного момента времени
+
+Игровой сервер обрабатывает ваши действия в описанном выше порядке.
+
+Для совершения действия необходимо записать соответствующую строку в таблицу 
+
+Действия, которые вы желаете сделать. Данную схему вам предстоит заполнять данными.
+CREATE SCHEMA actions;
+#### Действия перемещения
+```
+CREATE TABLE "actions"."ship_moves" (
+  "ship" INTEGER NOT NULL, --  Корабль
+  "destination" INTEGER NOT NULL --  Целевой остров
+);
 ```
 
-Запуск (с одним игроком и пустым решением):
-
-```sh
-docker run --rm -it ghcr.io/all-cups/it_one_cup_sql
+#### Ожидание
+```
+CREATE TABLE "actions"."wait" (
+    "id" SERIAL PRIMARY KEY NOT NULL, --  Идентификатор действия
+    "until" DOUBLE PRECISION NOT NULL --  Момент времени в который ожидание должно закончиться
+);
 ```
 
-Настройки мира лежат в [options.toml](options.toml)
-
-Ваше решение можно передать через stdin с помощью аргумента `--solution -`
-(вместо `-` можно указать путь к файлу, но в таком случае нужно чтобы он был доступен контейнеру):
-
-```sh
-cat solution.sql | docker run --rm -i ghcr.io/all-cups/it_one_cup_sql --solution -
+#### Предложения сделок с контрагентами
+```
+CREATE TABLE "actions"."offers" (
+    "id" SERIAL PRIMARY KEY NOT NULL, --  Идентификатор предложения
+    "contractor" INTEGER NOT NULL, --  Контрагент
+    "quantity" DOUBLE PRECISION NOT NULL --  Количество покупаемого/продаваемого товара
+);
 ```
 
-Контейнер завершится, как только игра закончится.
-Если хочется посмотреть в базу после окончания игры, можно использовать аргумент `--leave-running`
-(и не забыть пробросить порт для соединения с базой снаружи):
-
-```sh
-docker run --rm -it -p 5432:5432 ghcr.io/all-cups/it_one_cup_sql --leave-running
+#### Погрузка/разгрузка кораблей
+```
+CREATE TYPE "actions"."transfer_direction" AS ENUM ('load', 'unload');
+CREATE TABLE "actions"."transfers" (
+    "ship" INTEGER NOT NULL, --  Корабль, на/с которого переносить товар
+    "item" INTEGER NOT NULL, --  Тип товара, который нужно переносить
+    "quantity" DOUBLE PRECISION NOT NULL, --  Количество товара, которое нужно перенести
+    "direction" "actions"."transfer_direction" NOT NULL --  Направление - погрузка/разгрузка
+);
 ```
 
-Фиксирование сида возможно с помощью переменной окружения `SEED`:
 
-```sh
-docker run --rm -it -e SEED=123 ghcr.io/all-cups/it_one_cup_sql
-```
 
-Другие доступные параметры запуска контейнера можно увидеть с помощью параметра `--help`:
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/4a845bf6-bd8b-44d1-9550-eb1e5cd1f6f7)  
 
-```sh
-docker run --rm -it ghcr.io/all-cups/it_one_cup_sql --help
-```
+Пруфы занимаемого места:  
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/c926ce4b-c747-406d-be40-3bdae0a901f4)  
 
-## Пример локального запуска 
-
-Для двух решений с сохранением содержимого init.sql и передачей своего файла настроек мира.
-
-### MacOS / Linux:
-```shell
-docker run \
-  --mount "type=bind,src=$(pwd)/my-solution.sql,dst=/tmp/player1-solution.sql" \
-  --mount "type=bind,src=$(pwd)/quick_start.sql,dst=/tmp/player2-solution.sql" \
-  --mount "type=bind,src=$(pwd)/init.sql,dst=/tmp/init.sql" \
-  --mount "type=bind,src=$(pwd)/my-options.toml,dst=/tmp/options.toml" \
-  --rm -it -e SEED=123456 ghcr.io/all-cups/it_one_cup_sql \
-  --solution /tmp/player1-solution.sql \
-  --solution /tmp/player2-solution.sql \
-  --dump-init /tmp/init.sql \
-  --options /tmp/options.toml \
-  --log INFO   
-```
-
-### Windows:
-```
-docker run ^
-  --mount "type=bind,src=%cd%/my-solution.sql,dst=/tmp/player1-solution.sql" ^
-  --mount "type=bind,src=%cd%/quick_start.sql,dst=/tmp/player2-solution.sql" ^
-  --mount "type=bind,src=%cd%/init.sql,dst=/tmp/init.sql" ^
-  --mount "type=bind,src=%cd%/my-options.toml,dst=/tmp/options.toml" ^
-  --rm -it -e SEED=123456 ghcr.io/all-cups/it_one_cup_sql ^
-  --solution /tmp/player1-solution.sql ^
-  --solution /tmp/player2-solution.sql ^
-  --dump-init /tmp/init.sql ^
-  --options /tmp/options.toml ^
-  --log INFO   
-```
-Обратите внимание, что в этом примере:
-* `$(pwd)` / `%cd%`- это текущий каталог хост машины
-* Файл `init.sql` должен существовать _перед_ запуском (он будет перезаписан)
-* Параметр `--log INFO` можно заменить на `--log DEBUG` для детализации ошибок
-
-## Просмотр дампа игры
-
-Пример просмотра дампа игры с помощью докера:
-
-1. Поднять базу данных: `docker run --rm --detach --name dump-explorer --env POSTGRES_PASSWORD=verysecret postgres`
-2. Загрузить дамп: `docker exec -i dump-explorer pg_restore --dbname postgres --username postgres < game.dump`
-3. Подключиться к базе: `docker exec -it dump-explorer psql`
-4. Получить нужную информацию: `select * from final_world.players;`
-5. Остановить контейнер: `docker stop dump-explorer`
