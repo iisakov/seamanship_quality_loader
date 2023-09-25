@@ -8,14 +8,16 @@
 
 ----
 
-Сам код смотреть не стоит - в условиях нехватки времени и среднего знания **pl/pgSQL**, код весьмя удручает.  
+Сам код смотреть не стоит - в условиях нехватки времени и среднего знания **pl/pgSQL**, код весьмя удручает.
+Первая версия решения [тут](https://github.com/iisakov/seamanship_quality_loader/blob/master/solution/seeman_v1.0.0.sql) отражает красату замысла, последняя версия [здесь](https://github.com/iisakov/seamanship_quality_loader/blob/master/solution/seeman_v4.0.0do.sql) показывает во что может превратиться файл без должного к нему отношения.  
+
 Но есть прикольные гифки. Они сгенерированы на основе логфайлов локалранера чемпионата.  
 
-**Локал ранер организаторами был реализован ввиде докер файла с требованиями внешних файлов:
+**Локал ранер** организаторами был реализован ввиде **докер файла** с требованиями внешних файлов:
   - файл настроек - предоставлялся организаторами ([options/](https://github.com/iisakov/seamanship_quality_loader/tree/master/options))
-  - файла стратегии - непосредственно скрипт победной стратегии (solution/)
+  - файла стратегии - непосредственно скрипт победной стратегии ([solution/](https://github.com/iisakov/seamanship_quality_loader/tree/master/solution))
   
-Так же среди файлов можно найти небольшой **bash-скрипт**, в котором я запускал **несколько докер контейнеров на своём ноутбуке.**  
+Так же среди файлов можно найти небольшой **bash-скрипт** [все скрипты](https://github.com/iisakov/seamanship_quality_loader/tree/master/run), в котором я запускал **несколько докер контейнеров на своём ноутбуке.** [запускающий несколько докеров](https://github.com/iisakov/seamanship_quality_loader/blob/master/run/run_p.sh).
 
 ![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/ac721239-f911-46ae-8022-310f13e1b93f)  
 
