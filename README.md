@@ -3,9 +3,10 @@
 Место в турнирной таблице - **33** из **50** финалистов.  
 Обшее количество участников - **150 аккаунтов**.  
 
-![otput_1](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/e8c2c6d5-7502-4117-a4a3-4d2dd03e228d)  
+![otput_1](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/d3182d54-6030-4d40-8fb1-cfec69ab2ae9)  
 Гифки большего размера gitHub не пропускает, так что это единственная гифка.
 
+----
 
 Сам код смотреть не стоит - в условиях нехватки времени и среднего знания **pl/pgSQL**, код весьмя удручает.  
 Но есть прикольные гифки. Они сгенерированы на основе логфайлов локалранера чемпионата.  
@@ -16,7 +17,8 @@
   
 Так же среди файлов можно найти небольшой **bash-скрипт**, в котором я запускал **несколько докер контейнеров на своём ноутбуке.**  
 
-![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/e87ea96e-ac7a-473d-91c3-174799a378d8)  
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/ac721239-f911-46ae-8022-310f13e1b93f)  
+
 
 ## Правила игрового мира
 В данной игре вам предстоит торговать и перевозить товары. Ищите выгодные контракты и заработайте больше ваших оппонентов для победы.
@@ -73,8 +75,10 @@ CREATE TABLE "actions"."transfers" (
 
 
 
-![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/4a845bf6-bd8b-44d1-9550-eb1e5cd1f6f7)  
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/3e761c47-eb7a-4a82-88b3-3c150ec74012)  
+
 
 Пруфы занимаемого места:  
-![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/c926ce4b-c747-406d-be40-3bdae0a901f4)  
+![image](https://github.com/iisakov/seamanship_quality_loader/assets/59264679/973ab311-5a65-4f36-a1e4-6898d1d28883)  
+ 
 
